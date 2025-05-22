@@ -60,7 +60,6 @@ export class LlmService implements OnModuleInit {
       const foundUser = await this.userRepository.findOne({
         where: { id: userId },
       });
-      this.invalidateUserSolutionsCache(userId);
       if (!foundUser) {
         throw new NotFoundException('User not found');
       }
@@ -70,6 +69,7 @@ export class LlmService implements OnModuleInit {
       });
       await this.solutionRepository.save(solution);
       this.llmQueue.add('llm', { solutionId: solution.id });
+      this.invalidateUserSolutionsCache(userId);
       return plainToInstance(GetSolutionDto, solution, {
         excludeExtraneousValues: true,
       });
