@@ -33,14 +33,6 @@ function App() {
             </PublicRoute>
           }
         />
-        {/* <Route
-          path="/dashboard"
-          element={
-            <PrivateRoute>
-              <Dashboard />
-            </PrivateRoute>
-          }
-        /> */}
       </Routes>
     </Router>
   );
