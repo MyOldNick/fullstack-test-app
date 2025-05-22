@@ -32,12 +32,13 @@ export class LlmService implements OnModuleInit {
 
   constructor(
     @InjectRepository(Solution)
-    private solutionRepository: Repository<Solution>,
-    @InjectRepository(User) private userRepository: Repository<User>,
-    @InjectRepository(Analyze) private analyzeRepository: Repository<Analyze>,
-    @InjectQueue('llm') private llmQueue: Queue,
-    private configService: ConfigService,
-    private redisService: RedisService,
+    private readonly solutionRepository: Repository<Solution>,
+    @InjectRepository(User) private readonly userRepository: Repository<User>,
+    @InjectRepository(Analyze)
+    private readonly analyzeRepository: Repository<Analyze>,
+    @InjectQueue('llm') private readonly llmQueue: Queue,
+    private readonly configService: ConfigService,
+    private readonly redisService: RedisService,
   ) {}
 
   onModuleInit() {

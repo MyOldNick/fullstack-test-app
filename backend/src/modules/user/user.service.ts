@@ -17,7 +17,7 @@ import { AuthDto } from '../auth/dto/auth.dto';
 @Injectable()
 export class UserService {
   constructor(
-    @InjectRepository(User) private userRepository: Repository<User>,
+    @InjectRepository(User) private readonly userRepository: Repository<User>,
   ) {}
 
   async createUser(data: CreateUserDto): Promise<GetUserDto> {
