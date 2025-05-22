@@ -9,11 +9,14 @@ function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={
+        <Route
+          path="/"
+          element={
             <PrivateRoute>
               <Dashboard />
             </PrivateRoute>
-          } />
+          }
+        />
         <Route
           path="/login"
           element={
@@ -22,11 +25,14 @@ function App() {
             </PublicRoute>
           }
         />
-        <Route path="/signup" element={
+        <Route
+          path="/signup"
+          element={
             <PublicRoute>
-              <SignUp/>
+              <SignUp />
             </PublicRoute>
-          }/>
+          }
+        />
         {/* <Route
           path="/dashboard"
           element={

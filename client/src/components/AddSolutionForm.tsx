@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
 import type { CreateSolution } from '../common/types';
 
-
 type ComponentProps = {
-    action: (data: CreateSolution) => Promise<void> 
-}
+  action: (data: CreateSolution) => Promise<void>;
+};
 
 function AddSoultionForm({ action }: ComponentProps) {
   const [formData, setFormData] = useState<CreateSolution>({
@@ -59,7 +58,10 @@ function AddSoultionForm({ action }: ComponentProps) {
           placeholder="Reason"
           className="p-2 rounded-md border border-gray-300 w-full h-10 px-2"
         />
-        <button type="submit" className="p-2 rounded-md bg-blue-500 text-white h-10 mt-2 cursor-pointer">
+        <button
+          type="submit"
+          className="p-2 rounded-md bg-blue-500 text-white h-10 mt-2 cursor-pointer"
+        >
           Add solution
         </button>
       </form>

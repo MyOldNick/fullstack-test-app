@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate  } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import api from '../api';
 import type { AxiosResponse } from 'axios';
 import axios from 'axios';
@@ -17,15 +17,15 @@ function Login() {
     password: '',
   });
   const [error, setError] = useState<string>('');
-  const { setAuthenticated } = useAuth()
-  const navigate = useNavigate()
+  const { setAuthenticated } = useAuth();
+  const navigate = useNavigate();
 
   const login = async (data: FormDataType): Promise<void> => {
     try {
       const response: AxiosResponse<{ message: string }> = await api.post('/auth/login', data);
       if (response.status === 200) {
-        setAuthenticated(true)
-        navigate("/", { replace: true })
+        setAuthenticated(true);
+        navigate('/', { replace: true });
       }
     } catch (error) {
       console.log(error);
@@ -45,7 +45,7 @@ function Login() {
   };
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
-    if (error) setError("")
+    if (error) setError('');
     const { name, value } = event.target;
     setData({
       ...data,
@@ -73,11 +73,16 @@ function Login() {
           onChange={handleChange}
           className="p-2 rounded-md border border-gray-300  h-10 px-2"
         />
-        <button type="submit" className="p-2 rounded-md bg-blue-500 text-white h-10 mt-2 cursor-pointer">
+        <button
+          type="submit"
+          className="p-2 rounded-md bg-blue-500 text-white h-10 mt-2 cursor-pointer"
+        >
           Login
         </button>
       </form>
-      <Link to='/signup' className='mt-4 text-blue-500 cursor-pointer'>Sign up</Link>
+      <Link to="/signup" className="mt-4 text-blue-500 cursor-pointer">
+        Sign up
+      </Link>
       {error && <p className="text-red-500 mt-2">{error}</p>}
     </div>
   );

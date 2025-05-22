@@ -14,7 +14,7 @@ function SignUp() {
   const [data, setData] = useState<FormDataType>({
     email: '',
     password: '',
-    name: ''
+    name: '',
   });
   const [error, setError] = useState<string>('');
   const [success, setSuccess] = useState<boolean>(false);
@@ -23,7 +23,7 @@ function SignUp() {
     try {
       const response: AxiosResponse<{ message: string }> = await api.post('/user', data);
       if (response.status === 201) {
-        setSuccess(true)
+        setSuccess(true);
       }
     } catch (error) {
       console.log(error);
@@ -39,12 +39,12 @@ function SignUp() {
     setData({
       email: '',
       password: '',
-      name: ""
+      name: '',
     });
   };
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
-    if (error) setError("")
+    if (error) setError('');
     const { name, value } = event.target;
     setData({
       ...data,
@@ -80,13 +80,24 @@ function SignUp() {
           onChange={handleChange}
           className="p-2 rounded-md border border-gray-300  h-10 px-2"
         />
-        <button type="submit" className="p-2 rounded-md bg-blue-500 text-white h-10 mt-2 cursor-pointer">
+        <button
+          type="submit"
+          className="p-2 rounded-md bg-blue-500 text-white h-10 mt-2 cursor-pointer"
+        >
           Create account
         </button>
       </form>
-      <Link to='/login' className='mt-4 text-blue-500'>Login</Link>
-      {success && <div className="text-green-500 mt-2">
-        <span>User created. </span><Link to='/login' className='mt-4 text-blue-500 cursor-pointer'>Login</Link></div>}
+      <Link to="/login" className="mt-4 text-blue-500">
+        Login
+      </Link>
+      {success && (
+        <div className="text-green-500 mt-2">
+          <span>User created. </span>
+          <Link to="/login" className="mt-4 text-blue-500 cursor-pointer">
+            Login
+          </Link>
+        </div>
+      )}
       {error && <p className="text-red-500 mt-2">{error}</p>}
     </div>
   );

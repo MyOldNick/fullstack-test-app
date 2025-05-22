@@ -17,7 +17,7 @@ import { RedisCacheModule } from './core/cache/cache.module';
       isGlobal: true,
     }),
     QueueModule,
-    RedisCacheModule
+    RedisCacheModule,
   ],
   controllers: [],
   providers: [],

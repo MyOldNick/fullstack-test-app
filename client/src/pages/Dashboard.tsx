@@ -11,7 +11,7 @@ const LIMIT = 100;
 
 function Dashboard() {
   const [history, setHistory] = useState<Solution[]>([]);
-  const [error, setError] = useState<string>("");
+  const [error, setError] = useState<string>('');
   const [hasMore, setHasMore] = useState<boolean>(true);
   const [skip, setSkip] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(false);
@@ -20,7 +20,7 @@ function Dashboard() {
 
   const getHistory = useCallback(async (): Promise<void> => {
     try {
-    setLoading(true)
+      setLoading(true);
       const response = await api.get('/llm/solution', {
         params: {
           skip,
@@ -39,14 +39,13 @@ function Dashboard() {
       if (axios.isAxiosError(error)) {
         setError(error.response?.data.message);
       }
-    }
-    finally {
-        setLoading(false)
+    } finally {
+      setLoading(false);
     }
   }, [skip]);
 
   const addSolution = useCallback(async (data: CreateSolution): Promise<void> => {
-    if (error) setError("")
+    if (error) setError('');
     try {
       const result = await api.post('/llm/solution', data);
       if (result.status === 201) {
@@ -62,15 +61,13 @@ function Dashboard() {
 
   const logout = async () => {
     try {
-        const result = await api.delete('/auth/logout')
-        if (result.status === 200) {
-            setAuthenticated(false)
-            navigate('/login', { replace: true })
-        }
-    } catch (error) {
-        
-    }
-  }
+      const result = await api.delete('/auth/logout');
+      if (result.status === 200) {
+        setAuthenticated(false);
+        navigate('/login', { replace: true });
+      }
+    } catch (error) {}
+  };
 
   useEffect(() => {
     getHistory();
@@ -78,17 +75,22 @@ function Dashboard() {
 
   return (
     <>
-    <div className='flex justify-end p-4'>
-        <button onClick={logout} className="bg-red-500 text-white px-4 py-2 rounded-md cursor-pointer">Logout</button>
-    </div>
-    <div className="flex flex-col items-center pt-10 gap-10">
-      <h1>Welcome {user?.name}</h1>
-      <p className="text-red-500 h-10 max-w-1/2">{error && <span>{error}</span>}</p>
-      <div className="flex w-full">
-        <AddSoultionForm action={addSolution} />
-        <History history={history} hasMore={hasMore} getHistory={getHistory} loading={loading} />
+      <div className="flex justify-end p-4">
+        <button
+          onClick={logout}
+          className="bg-red-500 text-white px-4 py-2 rounded-md cursor-pointer"
+        >
+          Logout
+        </button>
       </div>
-    </div>
+      <div className="flex flex-col items-center pt-10 gap-10">
+        <h1>Welcome {user?.name}</h1>
+        <p className="text-red-500 h-10 max-w-1/2">{error && <span>{error}</span>}</p>
+        <div className="flex w-full">
+          <AddSoultionForm action={addSolution} />
+          <History history={history} hasMore={hasMore} getHistory={getHistory} loading={loading} />
+        </div>
+      </div>
     </>
   );
 }

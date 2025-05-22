@@ -18,7 +18,7 @@ import { StatusEnum } from 'src/common/enums/status.enum';
 import { ConfigService } from '@nestjs/config';
 import { GenerativeModel, GoogleGenerativeAI } from '@google/generative-ai';
 import { PaginationDto } from 'src/common/dto/pagination.dto';
-import { RedisService } from "@liaoliaots/nestjs-redis"
+import { RedisService } from '@liaoliaots/nestjs-redis';
 
 // I have combined the "Analyze" and "Solution" entities because the application is  simple, ideally to have separate services for each
 
@@ -37,7 +37,7 @@ export class LlmService implements OnModuleInit {
     @InjectRepository(Analyze) private analyzeRepository: Repository<Analyze>,
     @InjectQueue('llm') private llmQueue: Queue,
     private configService: ConfigService,
-    private redisService: RedisService
+    private redisService: RedisService,
   ) {}
 
   onModuleInit() {
@@ -60,7 +60,7 @@ export class LlmService implements OnModuleInit {
       const foundUser = await this.userRepository.findOne({
         where: { id: userId },
       });
-      this.invalidateUserSolutionsCache(userId)
+      this.invalidateUserSolutionsCache(userId);
       if (!foundUser) {
         throw new NotFoundException('User not found');
       }
@@ -90,8 +90,8 @@ export class LlmService implements OnModuleInit {
     pagination: PaginationDto;
   }): Promise<GetSolutionDto[]> {
     try {
-      const request = this.buildRequest({ userId, pagination })
-      const cahedSolutions = await this.redis.get(request)
+      const request = this.buildRequest({ userId, pagination });
+      const cahedSolutions = await this.redis.get(request);
 
       if (cahedSolutions) return cahedSolutions;
 
@@ -111,11 +111,11 @@ export class LlmService implements OnModuleInit {
         },
       });
 
-      const preparedSolutions =  plainToInstance(GetSolutionDto, solutions, {
+      const preparedSolutions = plainToInstance(GetSolutionDto, solutions, {
         excludeExtraneousValues: true,
       });
 
-      this.redis.set(request, JSON.stringify(preparedSolutions), 'EX', 3600)
+      this.redis.set(request, JSON.stringify(preparedSolutions), 'EX', 3600);
 
       return preparedSolutions;
     } catch (error) {
@@ -172,18 +172,28 @@ export class LlmService implements OnModuleInit {
     }
   }
 
-
-  buildRequest({ userId, pagination }: { userId: number, pagination: PaginationDto }): string {
-    return `solutions:user=${userId}:skip=${pagination.skip}:limit=${pagination.limit}`
+  buildRequest({
+    userId,
+    pagination,
+  }: {
+    userId: number;
+    pagination: PaginationDto;
+  }): string {
+    return `solutions:user=${userId}:skip=${pagination.skip}:limit=${pagination.limit}`;
   }
 
   async scanKeys(pattern: string): Promise<string[]> {
     let cursor = '0';
     let keys: string[] = [];
 
-
     while (true) {
-      const [nextCursor, batch] = await this.redis.scan(cursor, 'MATCH', pattern, 'COUNT', 100);
+      const [nextCursor, batch] = await this.redis.scan(
+        cursor,
+        'MATCH',
+        pattern,
+        'COUNT',
+        100,
+      );
       keys.push(...batch);
       if (nextCursor === '0') break;
       cursor = nextCursor;
@@ -192,7 +202,6 @@ export class LlmService implements OnModuleInit {
     return keys;
   }
 
-
   async invalidateUserSolutionsCache(userId: number) {
     const pattern = `solutions:user=${userId}:*`;
     const keys = await this.scanKeys(pattern);
@@ -200,5 +209,4 @@ export class LlmService implements OnModuleInit {
       await this.redis.del(...keys);
     }
   }
-
 }
