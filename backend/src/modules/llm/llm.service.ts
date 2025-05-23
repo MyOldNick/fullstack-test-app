@@ -132,7 +132,7 @@ export class LlmService implements OnModuleInit {
     try {
       const foundSolution = await this.solutionRepository.findOne({
         where: { id: solutionId },
-        relations: ['analyze'],
+        relations: ['analyze', 'user'],
       });
       if (!foundSolution) {
         throw new NotFoundException('Solution not found');
@@ -161,6 +161,8 @@ export class LlmService implements OnModuleInit {
         analyze: savedAnalyze,
         status: StatusEnum.ANALYZED,
       });
+
+      this.invalidateUserSolutionsCache(foundSolution.user?.id)
     } catch (error) {
       console.log(error);
       await this.solutionRepository.update(solutionId, {
